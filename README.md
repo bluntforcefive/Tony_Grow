@@ -3,7 +3,11 @@ Tony Grow is a desperate attempt at seeing a vision through to its functional co
 
 
 #Libraries Used:
+*[TaskScheduler](https://www.arduino.cc/reference/en/libraries/taskscheduler/)
+*[Arduino](
+
 
 #Variable Defitions:
 
 #Hardware List:
+
