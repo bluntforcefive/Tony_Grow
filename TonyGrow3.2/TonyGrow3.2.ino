@@ -189,12 +189,12 @@ bool plantWaterToggle();
 bool resevoirFill();
 //bool vegToBloom();
 bool cO2Inject();
-bool saveToSD();
+void saveToSD();
 void readDateTime();
 
 // ==== Task definitions ========================
 //Task LEDToggler     (1 * TASK_SECOND, TASK_FOREVER, &LEDToggle, &ts, true);
-Task saveToSDTask     (savePeriod * TASK_SECOND, TASK_FOREVER, &readSensors, &ts, true);
+Task saveToSDTask     (savePeriod * TASK_SECOND, TASK_FOREVER, &saveToSD, &ts, true);
 Task lightsToggler    (lightsPeriodOn * TASK_HOUR, TASK_FOREVER, &lightsToggle, &ts, true); //will adjust parameters within lightsToggle by lightsPeriodOn and lightsPeriodOff
 Task foliageToggler   (foliagePeriodOn * TASK_HOUR, TASK_FOREVER, &foliageToggle, &ts, true);
 Task exhaustToggler   (exhaustPeriodOn * TASK_MINUTE, TASK_FOREVER, &exhaustToggle, &ts, true);
@@ -424,8 +424,8 @@ int menuPicker(){
 
 }
 
-int userInput(){
-  int value = 0;
+int userInput(int value){
+  value = 0;
   while(digitalRead(RotarySwitch) == HIGH){
     value = rotaryPosition(value);
     lcd.setCursor(18,3);
@@ -447,30 +447,30 @@ int rotaryPosition(int value){
 }
 
 
-bool saveToSD(){
-  String dataString = "";
+void saveToSD(){
+ 
+  readSensors();
   //string variables and datetime together
-  dataString += String(readDateTime()) += ",";
-  dataString += String(AmbientHum) += ",";
-  dataString += String(AmbientTempF) += ",";
-  dataString += String(lightsHum) += ",";
-  dataString += String(lightsTempF) += ",";
-  dataString += String(midHum) += ",";
-  dataString += String(midTempF) += ",";
-  dataString += String(soilHum) += ",";
-  dataString += String(soilTempF) += ",";
-  dataString += String(averageHum) += ",";
-  dataString += String(averageTempF) += ",";
-  dataString += String(soilHum) += ",";
-  dataString += String(timeNow) += ",";
-  dataString += String(digitalRead(lights)) += ",";
-  dataString += String(digitalRead(foliageFans)) += ",";
-  dataString += String(digitalRead(exhaustFans)) += ",";
-  dataString += String(digitalRead(RB1OUT4)) += ",";
-  dataString += String(digitalRead(heater)) += ",";
-  dataString += String(digitalRead(co2Dispense)) += ",";
-  dataString += String(digitalRead(waterPump)) += ",";
-  dataString += String(digitalRead(RB2OUT4));
+  String dataString = String(timeNow) + ",";
+  dataString = dataString + String(AmbientHum) + ",";
+  dataString = dataString + String(AmbientTempF) + ",";
+  dataString = dataString + String(lightsHum) + ",";
+  dataString = dataString + String(lightsTempF) + ",";
+  dataString = dataString + String(midHum) + ",";
+  dataString = dataString + String(midTempF) + ",";
+  dataString = dataString + String(soilHum) + ",";
+  dataString = dataString + String(soilTempF) + ",";
+  dataString = dataString + String(averageHum) + ",";
+  dataString = dataString + String(averageTempF) + ",";
+  dataString = dataString + String(soilHum) + ",";
+  dataString = dataString + String(digitalRead(lights)) + ",";
+  dataString = dataString + String(digitalRead(foliageFans)) + ",";
+  dataString = dataString + String(digitalRead(exhaustFans)) + ",";
+  dataString = dataString + String(digitalRead(RB1OUT4)) + ",";
+  dataString = dataString + String(digitalRead(heater)) + ",";
+  dataString = dataString + String(digitalRead(co2Dispense)) + ",";
+  dataString = dataString + String(digitalRead(waterPump)) + ",";
+  dataString = dataString + String(digitalRead(RB2OUT4));
     
   // open the file. note that only one file can be open at a time,
   // so you have to close this one before opening another.
@@ -482,12 +482,15 @@ bool saveToSD(){
     dataFile.close();
     // print to the serial port too:
     Serial.println(dataString);
+
   }
   
   // if the file isn't open, pop up an error:
   else {
     Serial.println("error opening datalog.txt");
+
   }
+
 }
 
 
