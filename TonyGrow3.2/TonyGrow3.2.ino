@@ -163,7 +163,8 @@ const int chipSelect = 4;
 Scheduler ts;
 
 //Task periods
-int savePeriod =      20;    //in seconds
+int screenPeriod=        1;    //in seconds
+int savePeriod =        20;    //in seconds
 int lightsPeriodOn  =   22;    //in hours
 int lightsPeriodOff =    2;    //in hours
 int foliagePeriodOn =    3;    //in hours
@@ -194,6 +195,7 @@ void readDateTime();
 
 // ==== Task definitions ========================
 //Task LEDToggler     (1 * TASK_SECOND, TASK_FOREVER, &LEDToggle, &ts, true);
+Task screenUdpateTask (screenPeriod * TASK_SECOND, TASK_FOREVER, &screenUpdate, &ts, true);
 Task saveToSDTask     (savePeriod * TASK_SECOND, TASK_FOREVER, &saveToSD, &ts, true);
 Task lightsToggler    (lightsPeriodOn * TASK_HOUR, TASK_FOREVER, &lightsToggle, &ts, true); //will adjust parameters within lightsToggle by lightsPeriodOn and lightsPeriodOff
 Task foliageToggler   (foliagePeriodOn * TASK_HOUR, TASK_FOREVER, &foliageToggle, &ts, true);
@@ -303,7 +305,13 @@ void setup() {
 void loop() {
   ts.execute();
 }
- 
+
+
+
+void screenUpdate(){
+  
+
+}
 
 
 bool LEDToggle(){
