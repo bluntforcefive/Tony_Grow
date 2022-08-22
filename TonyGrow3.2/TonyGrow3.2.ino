@@ -164,14 +164,14 @@ Scheduler ts;
 
 //Task periods
 int screenPeriod=        1;    //in seconds
-int savePeriod =        20;    //in seconds
-int lightsPeriodOn  =   22;    //in hours
-int lightsPeriodOff =    2;    //in hours
-int foliagePeriodOn =    3;    //in hours
-int foliagePeriodOff =   1;    //in hours
-int exhaustPeriodOn =    5;    //in minutes
-int exhaustPeriodOff =  20;    //in minutes
-int waterPeriodOn =     10;    //in seconds
+int savePeriod =        10;    //in seconds
+int lightsPeriodOn  =   16;    //in hours 
+int lightsPeriodOff =    8;    //in hours
+int foliagePeriodOn =    3;    //in hours   ;foliage fan
+int foliagePeriodOff =   1;    //in hours   ;foliage fan
+int exhaustPeriodOn =    5;    //in minutes ;exhaust fan
+int exhaustPeriodOff =  20;    //in minutes ;exhaust fan
+int waterPeriodOn =     10;    //in seconds 
 int waterPeriodOff =   100;    //in seconds 
 int resevoirPeriod =     1;    //in hours
 //datetime? vegToBloom (either period or date...need to compare to RTC 
@@ -309,7 +309,7 @@ void loop() {
 
 
 void screenUpdate(){
-  
+
 
 }
 
@@ -332,7 +332,7 @@ bool lightsToggle(){
 }
 
 bool foliageToggle(){
-   if(digitalRead(foliageFans) == HIGH){//HIGH is off in this case, a LOW signal powers the outlet wirh 120V
+  if(digitalRead(foliageFans) == HIGH){//HIGH is off in this case, a LOW signal powers the outlet wirh 120V
     foliageToggler.setInterval(foliagePeriodOn * TASK_SECOND); //foliage fans time on
   }
   else {
@@ -456,7 +456,7 @@ int rotaryPosition(int value){
 
 
 void saveToSD(){
- 
+
   readSensors();
   //string variables and datetime together
   String dataString = String(timeNow) + ",";
