@@ -74,6 +74,21 @@ float averageTempF;
 #include <LiquidCrystal_I2C.h>  //SDA = 20, SCL =21 on Arduino Mega
 LiquidCrystal_I2C lcd(0x27, 20, 3); //Starts at 0, which means the 3 siginfies a 4 row display
 
+//LCD Menu
+#include <LcdMenu.h>
+#define LCD_ROWS 4
+#define LCD_COLS 20
+// Declare the menus
+extern MenuItem mainMenu[];
+extern MenuItem statusMenu[];
+extern MenuItem setupWizard[];
+//Define the main menu
+MenuItem mainMenu[] = {ItemHeader(), ItemSubMenu("Status"),ItemSubMenu("Setup Wizard"),ItemFooter()};
+//Define submenus
+MenuItem statusMenu[] = {ItemHeader(mainMenu),MenuItem("Temp/Hum"),MenuItem("Running Tasks"),MenuItem("Day/Time")};
+MenuItem setupWizard[] = {ItemHeader(mainMenu),MenuItem("Temp"),MenuItem("Humidity"),MenuItem("Soil Moisture"),MenuItem("CO2 Limits"),MenuItem("Lights On Hrs"),MenuItem("Lights Off Hrs"),MenuItem("Water Amt mL")};
+
+
 //RotaryEncoder
 #include <Arduino.h>
 #include <Encoder.h>
@@ -81,10 +96,6 @@ const uint8_t pinA = 8;
 const uint8_t pinB = 3;
 #define RotarySwitch 36 //Rotary switch is attached to pin 36 
 Encoder myEnc(pinA, pinB);
-
-//Menu
-int menuCategory = 0;
-int menuOption = 0;
 
 //Environmental Thresholds
 float tempUpperLimit = 84;
@@ -192,6 +203,7 @@ bool resevoirFill();
 bool cO2Inject();
 void saveToSD();
 void readDateTime();
+void screenUpdate();
 
 // ==== Task definitions ========================
 //Task LEDToggler     (1 * TASK_SECOND, TASK_FOREVER, &LEDToggle, &ts, true);
@@ -248,6 +260,9 @@ void setup() {
   lcd.clear();
   lcdTest();
 
+  //LCD Menu initialization
+  menu.setupLcdWithMenu(0x27, mainMenu);
+
   //Rotary Encoder
   pinMode(RotarySwitch, INPUT_PULLUP);
 
@@ -285,7 +300,6 @@ void setup() {
     }
 
 //Micro SD Card
-
   Serial.print("Initializing SD card...");
   // see if the card is present and can be initialized:
   if (!SD.begin(chipSelect)) {
@@ -294,11 +308,6 @@ void setup() {
     while (1);
   }
   Serial.println("card initialized.");
-
-  
-//Setup Wizard asks for User input 
-//  setupWizard();
-
 }
 
 
@@ -454,10 +463,7 @@ int rotaryPosition(int value){
   }
 }
 
-
-void saveToSD(){
-
-  readSensors();
+void stringTogether(){
   //string variables and datetime together
   String dataString = String(timeNow) + ",";
   dataString = dataString + String(AmbientHum) + ",";
@@ -479,7 +485,13 @@ void saveToSD(){
   dataString = dataString + String(digitalRead(co2Dispense)) + ",";
   dataString = dataString + String(digitalRead(waterPump)) + ",";
   dataString = dataString + String(digitalRead(RB2OUT4));
-    
+}
+
+void saveToSD(){
+
+  readSensors();
+  stringTogether();
+  
   // open the file. note that only one file can be open at a time,
   // so you have to close this one before opening another.
   File dataFile = SD.open("datalog.txt", FILE_WRITE);
