@@ -83,10 +83,10 @@ extern MenuItem mainMenu[];
 extern MenuItem statusMenu[];
 extern MenuItem setupWizard[];
 //Define the main menu
-MenuItem mainMenu[] = {ItemHeader(), ItemSubMenu("Status"),ItemSubMenu("Setup Wizard"),ItemFooter()};
+MenuItem mainMenu[] = {ItemHeader(), ItemSubMenu("Status", statusMenu),ItemSubMenu("Setup Wizard", setupWizard),ItemFooter()};
 //Define submenus
-MenuItem statusMenu[] = {ItemHeader(mainMenu),MenuItem("Temp/Hum"),MenuItem("Running Tasks"),MenuItem("Day/Time")};
-MenuItem setupWizard[] = {ItemHeader(mainMenu),MenuItem("Temp"),MenuItem("Humidity"),MenuItem("Soil Moisture"),MenuItem("CO2 Limits"),MenuItem("Lights On Hrs"),MenuItem("Lights Off Hrs"),MenuItem("Water Amt mL")};
+MenuItem statusMenu[] = {ItemHeader(mainMenu),MenuItem("Temp/Hum"),MenuItem("Running Tasks"),MenuItem("Day/Time"),ItemFooter()};
+MenuItem setupWizard[] = {ItemHeader(mainMenu),MenuItem("Temp"),MenuItem("Humidity"),MenuItem("Soil Moisture"),MenuItem("CO2 Limits"),MenuItem("Lights On Hrs"),MenuItem("Lights Off Hrs"),MenuItem("Water Amt mL"),ItemFooter()};
 
 
 //RotaryEncoder
